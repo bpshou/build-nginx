@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd $(dirname $0)
+
 if [ -d "../resource/nginx/" ];then
     cp -r ../resource/nginx/nginx-1.18.0.tar.gz ./
     cp -r ../resource/nginx/openssl-1.1.1g.tar.gz ./
@@ -33,4 +35,7 @@ docker cp ./pcre-8.44.tar.gz $los:/home
 docker cp ./nginx.sh $los:/home
 docker cp ./add-nginx.sh $los:/home
 docker exec -it $los sh /home/add-nginx.sh
+docker cp $los:/home/nginx ./
+
+tar -zcvf nginx.tar.gz nginx
 
