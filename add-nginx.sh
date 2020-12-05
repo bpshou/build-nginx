@@ -52,6 +52,8 @@ elif [ "$lsb_dist" = "alpine" ]; then
     # 添加nginx用户
     addgroup -g 101 -S nginx
     adduser -S -D -H -u 101 -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx
+    # 更换源
+    sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
     # 安装依赖
     apk add --no-cache --virtual .build curl gcc libc-dev make openssl-dev pcre-dev zlib-dev linux-headers libxslt-dev gd-dev geoip-dev perl-dev libedit-dev mercurial bash alpine-sdk findutils
     # 复制依赖库

@@ -41,6 +41,6 @@ if [ ! -n "$exiUser" ]; then
     fi
 fi
 
-cd $(pwd)/sbin
+cd $(dirname $0)/sbin
 exec ./nginx "$@"
 
