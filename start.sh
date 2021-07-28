@@ -8,6 +8,7 @@ if [ -d "../resource/nginx/" ];then
     cp -r ../resource/nginx/zlib-1.2.11.tar.gz ./
     cp -r ../resource/nginx/pcre-8.44.tar.gz ./
 fi
+
 if [ ! -f "nginx-1.18.0.tar.gz" ]; then
     curl -L http://nginx.org/download/nginx-1.18.0.tar.gz -o nginx-1.18.0.tar.gz
 fi
@@ -27,15 +28,25 @@ else
     los=$1
 fi
 
-docker run -itd --name $los $los
+if [ ! -n "$2" ]; then
+    tag=latest
+else
+    tag=$2
+fi
+
+# run container
+docker run -itd --name $los $los:$tag
 docker cp ./nginx-1.18.0.tar.gz $los:/home
 docker cp ./openssl-1.1.1g.tar.gz $los:/home
 docker cp ./zlib-1.2.11.tar.gz $los:/home
 docker cp ./pcre-8.44.tar.gz $los:/home
 docker cp ./nginx.sh $los:/home
 docker cp ./add-nginx.sh $los:/home
+
+# build nginx
 docker exec -it $los sh /home/add-nginx.sh
 docker cp $los:/home/nginx ./
 
+# pack nginx
 tar -zcvf nginx.tar.gz nginx
 

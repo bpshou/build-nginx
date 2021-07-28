@@ -11,6 +11,10 @@ release () {
     if [ -r /etc/lsb-release ]; then
         lsb_dist="ubuntu";
     fi
+    # debian
+    if [ -r /etc/ ]; then
+        lsb_dist="debian";
+    fi
     # alpine
     if [ -r /etc/alpine-release ]; then
         lsb_dist="alpine";
@@ -21,17 +25,11 @@ release () {
 lsb_dist=$( release )
 # 包管理器
 if [ "$lsb_dist" = "centos" ]; then
-    # 添加nginx用户
-    groupadd --system --gid 101 nginx
-    useradd --system -g nginx --no-create-home --home /nonexistent --comment "nginx user" --shell /bin/false --uid 101 nginx
     # 安装依赖
     yum -y install curl gcc-c++ make
     # 复制依赖库
     mkdir -p /home/lib
 elif [ "$lsb_dist" = "ubuntu" ]; then
-    # 添加nginx用户
-    addgroup --system --gid 101 nginx
-    adduser --system --disabled-login --ingroup nginx --no-create-home --home /nonexistent --gecos "nginx user" --shell /bin/false --uid 101 nginx
     # 安装依赖
     apt-get update && apt-get -y install curl build-essential autoconf
     # 复制依赖库
@@ -48,10 +46,10 @@ elif [ "$lsb_dist" = "ubuntu" ]; then
     cp -r /lib/x86_64-linux-gnu/libpthread-2.31.so /home/lib
     cp -r /lib/x86_64-linux-gnu/ld-2.31.so /home/lib
     cd /home/lib && ln -s ld-2.31.so ld-linux-x86-64.so.2
+elif [ "$lsb_dist" = "debian" ]; then
+    # 安装依赖
+    apt-get update && apt-get -y install curl
 elif [ "$lsb_dist" = "alpine" ]; then
-    # 添加nginx用户
-    addgroup -g 101 -S nginx
-    adduser -S -D -H -u 101 -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx
     # 更换源
     sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
     # 安装依赖
@@ -61,14 +59,9 @@ elif [ "$lsb_dist" = "alpine" ]; then
     cp -r /lib/ld-musl-x86_64.so.1 /home/lib
 else
     echo 'error: unknow system'
-    exit 0;
+    exit 1
 fi
 
-
-# curl -L http://nginx.org/download/nginx-1.18.0.tar.gz -o nginx-1.18.0.tar.gz && tar -zxvf nginx-1.18.0.tar.gz
-# curl -L https://www.openssl.org/source/openssl-1.1.1g.tar.gz -o openssl-1.1.1g.tar.gz && tar -zxvf openssl-1.1.1g.tar.gz
-# curl -L http://www.zlib.net/zlib-1.2.11.tar.gz -o zlib-1.2.11.tar.gz && tar -zxvf zlib-1.2.11.tar.gz
-# curl -L https://ftp.pcre.org/pub/pcre/pcre-8.44.tar.gz -o pcre-8.44.tar.gz && tar -zxvf pcre-8.44.tar.gz
 
 tar -zxvf /home/nginx-1.18.0.tar.gz -C /home
 tar -zxvf /home/openssl-1.1.1g.tar.gz -C /home
