@@ -27,8 +27,10 @@ if [ ! -f "./src/pcre-8.44.tar.gz" ]; then
 fi
 # add module rtmp
 if [ "$3" = "rtmp" ]; then
-    echo "add module rtmp"
-    git clone https://github.com/arut/nginx-rtmp-module.git ./src/nginx-rtmp-module
+    if [ ! -d "./src/nginx-rtmp-module" ]; then
+        echo "add module rtmp"
+        git clone https://github.com/arut/nginx-rtmp-module.git ./src/nginx-rtmp-module
+    fi
 fi 
 
 if [ ! -n "$1" ]; then
@@ -49,14 +51,15 @@ if [ ! -z "$losIsRun" ]; then
     docker rm -f $los
 fi
 docker run -itd --name $los $los:$tag
-docker cp ./nginx.sh $los:/home
-docker cp ./add-nginx.sh $los:/home
+docker cp ./build-nginx.sh $los:/home
 docker cp ./src $los:/home
 
 # build nginx
-docker exec -it $los sh /home/add-nginx.sh
+docker exec -it $los sh /home/build-nginx.sh
 docker cp $los:/home/nginx ./
 
 # pack nginx
-tar -zcvf nginx.tar.gz nginx
+if [ -d "nginx" ]; then
+    tar -zcvf nginx.tar.gz nginx
+fi
 
