@@ -1,20 +1,20 @@
 #!/bin/bash
 
 # 获取linux发行版本
-lsb_dist=$( grep -Eio "Ubuntu|Debian|Alpine|Kernel" /etc/issue )
+lsb_dist=$( grep -Eio "Ubuntu|Debian|Alpine|Kernel" /etc/issue | head -n1 )
 # 包管理器
 if [ "$lsb_dist" = "Kernel" ]; then
     # 安装依赖
-    yum -y install curl gcc-c++ make
+    yum -y update
+    yum -y groupinstall "Development Tools"
 elif [ "$lsb_dist" = "Ubuntu" ]; then
     # 安装依赖
     apt-get update
     apt-get -y install curl build-essential autoconf
 elif [ "$lsb_dist" = "Debian" ]; then
-    echo "apt-get -y install curl gcc gcc-c++ make automake autoconf"
     # 安装依赖
     apt-get update
-    apt-get -y install curl gcc gcc-c++ make automake autoconf
+    apt-get -y install curl build-essential autoconf
 elif [ "$lsb_dist" = "Alpine" ]; then
     # 更换源
     sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
@@ -81,14 +81,16 @@ cd /home/nginx/nginx-1.18.0
 --with-ld-opt='-Wl,--as-needed,-rpath,../lib -L../lib -lstdc++ -ldl' \
 --with-pcre=../src/pcre-8.44 \
 --with-openssl=../src/openssl-1.1.1g \
---with-zlib=../src/zlib-1.2.11
+--with-zlib=../src/zlib-1.2.11 \
+--add-module=../src/nginx-rtmp-module
+
 
 # 变更参数
 # --with-cc-opt='-Os -fomit-frame-pointer' \
 # --with-ld-opt=-Wl,--as-needed
 # --add-module=../nginx-rtmp-module
 
-make && make install
+make -j2 && make install
 
 if [ $? = 0 ]; then
     echo 'nginx build success'

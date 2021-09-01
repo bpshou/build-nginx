@@ -2,7 +2,7 @@
 
 cd $(dirname $0)
 
-if [ -d "./src/" ];then
+if [ ! -d "./src/" ];then
     mkdir -p src
 fi
 
@@ -60,6 +60,7 @@ docker cp $los:/home/nginx ./
 
 # pack nginx
 if [ -d "nginx" ]; then
+    rm -rf ./nginx/nginx-1.18.0/ ./nginx/src/
     tar -zcvf nginx.tar.gz nginx
 fi
 
