@@ -14,6 +14,6 @@ jobs:
             curl \
             build-essential \
             autoconf
-          echo "WORKPATH=$GITHUB_WORKSPACE/openwrt/" >> "$GITHUB_ENV"
+          echo "$WORKPATH"
           cd "$WORKPATH"
           pwd
