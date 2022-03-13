@@ -1,0 +1,8 @@
+name: github-actions
+on: [push]
+jobs:
+  build-nginx:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./build-nginx.sh
