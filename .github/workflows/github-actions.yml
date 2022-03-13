@@ -80,4 +80,4 @@ jobs:
           --with-openssl=../src/openssl-1.1.1g \
           --with-zlib=../src/zlib-1.2.11 \
           --add-module=../src/nginx-rtmp-module
-          make -j && make install
+          sudo make -j && sudo make install
