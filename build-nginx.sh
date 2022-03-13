@@ -25,6 +25,7 @@ else
     exit 1
 fi
 
+mkdir -p /home/src
 curl -L http://nginx.org/download/nginx-1.18.0.tar.gz -o /home/src/nginx-1.18.0.tar.gz
 curl -L https://www.openssl.org/source/openssl-1.1.1g.tar.gz -o /home/src/openssl-1.1.1g.tar.gz
 curl -L http://www.zlib.net/zlib-1.2.11.tar.gz -o /home/src/zlib-1.2.11.tar.gz
