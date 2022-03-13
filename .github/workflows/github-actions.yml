@@ -4,5 +4,16 @@ jobs:
   build-nginx:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: ./build-nginx.sh
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set ubuntu
+        run: |
+          sudo apt-get update \
+          sudo apt-get -y install \
+            curl \
+            build-essential \
+            autoconf
+          echo "WORKPATH=$GITHUB_WORKSPACE/openwrt/" >> "$GITHUB_ENV"
+          cd "$WORKPATH"
+          pwd
