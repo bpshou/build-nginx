@@ -9,10 +9,12 @@ if [ "$lsb_dist" = "Kernel" ]; then
     yum -y groupinstall "Development Tools"
 elif [ "$lsb_dist" = "Ubuntu" ]; then
     # 安装依赖
+    sed 's/\(deb\|security\|snapshot\).debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list -i
     apt-get update
     apt-get -y install curl build-essential autoconf
 elif [ "$lsb_dist" = "Debian" ]; then
     # 安装依赖
+    sed 's/\(deb\|security\|snapshot\).debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list -i
     apt-get update
     apt-get -y install curl build-essential autoconf
 elif [ "$lsb_dist" = "Alpine" ]; then
@@ -81,8 +83,9 @@ cd /home/nginx/nginx-1.18.0
 --with-ld-opt='-Wl,--as-needed,-rpath,../lib -L../lib -lstdc++ -ldl' \
 --with-pcre=../src/pcre-8.44 \
 --with-openssl=../src/openssl-1.1.1g \
---with-zlib=../src/zlib-1.2.11 \
---add-module=../src/nginx-rtmp-module
+--with-zlib=../src/zlib-1.2.11
+# --with-zlib=../src/zlib-1.2.11 \
+# --add-module=../src/nginx-rtmp-module
 
 
 # 变更参数
@@ -103,32 +106,30 @@ fi
 tee /home/nginx/nginx <<-'EOF'
 #!/bin/bash
 
-exiUser=$(grep -w nginx /etc/passwd)
-# 检查用户是否存在并创建
-if [ ! -n "$exiUser" ]; then
-    # 添加nginx用户
-    # 获取linux发行版本
-    Release=$(grep -Eio "Ubuntu|Debian" /etc/issue)
+# nginx sbin (必须指定该目录)
+cd /usr/share/nginx/sbin
+
+if [ ! -n "$(grep -w nginx /etc/passwd)" ]; then
     # alpine
     if [ -r /etc/alpine-release ]; then
-        addgroup -g 101 -S nginx
-        adduser -S -D -H -u 101 -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx
+        addgroup -g 202 -S nginx
+        adduser -S -D -H -u 202 -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx
     # Debian & Ubuntu
-    elif [ -n "$Release" ]; then
-        addgroup --system --gid 101 nginx
-        adduser --system --disabled-login --ingroup nginx --no-create-home --gecos "nginx user" --shell /bin/false --uid 101 nginx
+    elif [ -n "$(grep -Eio "Ubuntu|Debian" /etc/issue)" ]; then
+        addgroup --system --gid 202 nginx
+        adduser --system --disabled-login --ingroup nginx --no-create-home --gecos "nginx user" --shell /bin/false --uid 202 nginx
     # centos
     elif [ -r /etc/redhat-release ]; then
-        groupadd --system --gid 101 nginx
-        useradd --system -g nginx --no-create-home --home /nonexistent --comment "nginx user" --shell /bin/false --uid 101 nginx
+        groupadd --system --gid 202 nginx
+        useradd --system -g nginx --no-create-home --home /nonexistent --comment "nginx user" --shell /bin/false --uid 202 nginx
     else
         echo 'error: Unknow system, Cannot create nginx user'
         exit 1;
     fi
 fi
 
-cd $(dirname $0)/sbin
 exec ./nginx "$@"
+
 EOF
 
 chmod -R 755 /home/nginx/nginx

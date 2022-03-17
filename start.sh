@@ -23,7 +23,7 @@ if [ ! -f "./src/zlib-1.2.11.tar.gz" ]; then
     curl -L http://www.zlib.net/zlib-1.2.11.tar.gz -o ./src/zlib-1.2.11.tar.gz
 fi
 if [ ! -f "./src/pcre-8.44.tar.gz" ]; then
-    curl -L https://ftp.pcre.org/pub/pcre/pcre-8.44.tar.gz -o ./src/pcre-8.44.tar.gz
+    curl -L https://sourceforge.net/projects/pcre/files/pcre/8.44/pcre-8.44.tar.gz/download -o ./src/pcre-8.44.tar.gz
 fi
 # add module rtmp
 if [ "$3" = "rtmp" ]; then
