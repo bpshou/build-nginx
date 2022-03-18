@@ -22,7 +22,7 @@ jobs:
           curl -L http://nginx.org/download/nginx-1.18.0.tar.gz -o /home/src/nginx-1.18.0.tar.gz
           curl -L https://www.openssl.org/source/openssl-1.1.1g.tar.gz -o /home/src/openssl-1.1.1g.tar.gz
           curl -L http://www.zlib.net/zlib-1.2.11.tar.gz -o /home/src/zlib-1.2.11.tar.gz
-          curl -L https://sourceforge.net/projects/pcre/files/pcre/8.44/pcre-8.44.tar.gz/download -o ./src/pcre-8.44.tar.gz
+          curl -L https://sourceforge.net/projects/pcre/files/pcre/8.44/pcre-8.44.tar.gz/download -o /home/src/pcre-8.44.tar.gz
           git clone https://github.com/arut/nginx-rtmp-module.git /home/src/nginx-rtmp-module
           tar -zxvf /home/src/nginx-1.18.0.tar.gz -C /home/nginx
           tar -zxvf /home/src/openssl-1.1.1g.tar.gz -C /home/src
