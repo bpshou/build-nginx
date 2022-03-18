@@ -81,3 +81,30 @@ jobs:
           --with-zlib=../src/zlib-1.2.11 \
           --add-module=../src/nginx-rtmp-module
           sudo make -j && sudo make install
+
+      - name: Pack Nginx
+        run: |
+          sudo rm -rf /home/nginx/src /home/nginx/nginx-1.18.0
+          sudo tar -zcvf $(pwd)/nginx.tar.gz /home/nginx
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v1.0.0
+          release_name: Release v1.0.0
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./resource.e.zip
+          asset_name: resource.e.zip
+          asset_content_type: application/zip
