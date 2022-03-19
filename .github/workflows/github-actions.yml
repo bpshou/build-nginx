@@ -86,6 +86,8 @@ jobs:
 
       - name: Pack Nginx
         run: |
+          cd $GITHUB_ACTION_PATH
+          pwd
           sudo rm -rf /home/src /home/nginx/nginx-1.18.0
           sudo tar -zcvf /home/$NGINX_NAME /home/nginx
 
