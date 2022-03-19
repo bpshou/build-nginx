@@ -1,7 +1,7 @@
 name: github-actions
 on: [push]
 env: 
-  TAG: v1.0.0
+  TAG: v1.0.1
   NGINX_NAME: nginx.tar.gz
 jobs:
   build-nginx:
@@ -83,13 +83,15 @@ jobs:
           --with-zlib=../../src/zlib-1.2.11 \
           --add-module=../../src/nginx-rtmp-module
           sudo make -j && sudo make install
+          printf "\e[0;32m%s\e[0;0m\n" "Nginx build success"
 
       - name: Pack Nginx
         run: |
           cd $GITHUB_ACTION_PATH
-          pwd
+          printf "\e[0;32m%s\e[0;0m\n" $(pwd)
+          sudo cp -r $GITHUB_ACTION_PATH/work/build-nginx/build-nginx/nginx.sh /home/nginx/
           sudo rm -rf /home/src /home/nginx/nginx-1.18.0
-          sudo tar -zcvf /home/$NGINX_NAME /home/nginx
+          sudo tar -zcvf $GITHUB_ACTION_PATH/$NGINX_NAME /home/nginx
 
       - name: Create Release
         id: create_release
@@ -109,6 +111,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/$NGINX_NAME
+          asset_path: $GITHUB_ACTION_PATH/$NGINX_NAME
           asset_name: $NGINX_NAME
           asset_content_type: application/zip
