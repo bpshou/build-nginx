@@ -92,16 +92,17 @@ jobs:
           sudo cp -r ./work/build-nginx/build-nginx/nginx.sh /home/nginx/
           sudo rm -rf /home/src /home/nginx/nginx-1.18.0
           sudo tar -zcvf /home/$NGINX_NAME /home/nginx
+          echo $TAG
+          echo $NGINX_NAME
 
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ env.TAG }}
         with:
-          tag_name: $TAG
-          release_name: Release $TAG
+          tag_name: v1.0.1
+          release_name: Release v1.0.1
           draft: false
           prerelease: false
 
@@ -110,11 +111,9 @@ jobs:
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ env.TAG }}
-          NGINX_NAME: ${{ env.NGINX_NAME }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/$NGINX_NAME
-          asset_name: $NGINX_NAME
+          asset_path: /home/nginx.tar.gz
+          asset_name: nginx.tar.gz
           asset_content_type: application/zip
 
