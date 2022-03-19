@@ -87,7 +87,7 @@ jobs:
       - name: Pack Nginx
         run: |
           sudo rm -rf /home/src /home/nginx/nginx-1.18.0
-          sudo tar -zcvf $(pwd)/${{ NGINX_NAME }} /home/nginx
+          sudo tar -zcvf $(pwd)/$NGINX_NAME /home/nginx
 
       - name: Create Release
         id: create_release
@@ -95,8 +95,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ TAG }}
-          release_name: Release ${{ TAG }}
+          tag_name: $TAG
+          release_name: Release $TAG
           draft: false
           prerelease: false
 
@@ -107,6 +107,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ NGINX_NAME }}
-          asset_name: ${{ NGINX_NAME }}
+          asset_path: ./$NGINX_NAME
+          asset_name: $NGINX_NAME
           asset_content_type: application/zip
