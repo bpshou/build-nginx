@@ -6,6 +6,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        env: 
+          TAG: v1.0.0
+          NGINX_NAME: nginx.tar.gz
 
       - name: Set ubuntu
         run: |
@@ -85,7 +88,7 @@ jobs:
       - name: Pack Nginx
         run: |
           sudo rm -rf /home/nginx/src /home/nginx/nginx-1.18.0
-          sudo tar -zcvf $(pwd)/nginx.tar.gz /home/nginx
+          sudo tar -zcvf $(pwd)/${{ NGINX_NAME }} /home/nginx
 
       - name: Create Release
         id: create_release
@@ -93,8 +96,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.0.0
-          release_name: Release v1.0.0
+          tag_name: ${{ TAG }}
+          release_name: Release ${{ TAG }}
           draft: false
           prerelease: false
 
@@ -105,6 +108,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./nginx.tar.gz
-          asset_name: nginx.tar.gz
+          asset_path: ./${{ NGINX_NAME }}
+          asset_name: ${{ NGINX_NAME }}
           asset_content_type: application/zip
