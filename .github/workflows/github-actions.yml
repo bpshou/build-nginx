@@ -117,3 +117,4 @@ jobs:
           asset_path: /home/$NGINX_NAME
           asset_name: $NGINX_NAME
           asset_content_type: application/zip
+
