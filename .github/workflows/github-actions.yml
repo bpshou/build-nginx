@@ -91,7 +91,7 @@ jobs:
           printf "\e[0;32m%s\e[0;0m\n" $(pwd)
           sudo cp -r ./work/build-nginx/build-nginx/nginx.sh /home/nginx/
           sudo rm -rf /home/src /home/nginx/nginx-1.18.0
-          sudo tar -zcvf /home/$NGINX_NAME /home/nginx
+          sudo tar -zcvf $GITHUB_ACTION_PATH/$NGINX_NAME /home/nginx
           echo $TAG
           echo $NGINX_NAME
 
@@ -101,8 +101,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.0.1
-          release_name: Release v1.0.1
+          tag_name: ${{ env.TAG }}
+          release_name: Release ${{ env.TAG }}
           draft: false
           prerelease: false
 
@@ -113,7 +113,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/nginx.tar.gz
-          asset_name: nginx.tar.gz
+          asset_path: ${{ github.GITHUB_ACTION_PATH }}/${{ env.NGINX_NAME }}
+          asset_name: ${{ env.NGINX_NAME }}
           asset_content_type: application/zip
 
