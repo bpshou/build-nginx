@@ -1,14 +1,14 @@
 name: github-actions
 on: [push]
+env: 
+  TAG: v1.0.0
+  NGINX_NAME: nginx.tar.gz
 jobs:
   build-nginx:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        env: 
-          TAG: v1.0.0
-          NGINX_NAME: nginx.tar.gz
 
       - name: Set ubuntu
         run: |
