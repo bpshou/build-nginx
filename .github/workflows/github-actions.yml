@@ -87,11 +87,10 @@ jobs:
 
       - name: Pack Nginx
         run: |
-          cd $GITHUB_ACTION_PATH
           printf "\e[0;32m%s\e[0;0m\n" $(pwd)
-          sudo cp -r ./work/build-nginx/build-nginx/nginx.sh /home/nginx/
+          sudo cp -r /home/runner/work/build-nginx/build-nginx/nginx.sh /home/nginx/
           sudo rm -rf /home/src /home/nginx/nginx-1.18.0
-          sudo tar -zcvf $GITHUB_ACTION_PATH/$NGINX_NAME /home/nginx
+          sudo tar -zcvf $GITHUB_ACTION_PATH/$NGINX_NAME -C /home/nginx .
           echo $TAG
           echo $NGINX_NAME
           echo $GITHUB_ACTION_PATH
