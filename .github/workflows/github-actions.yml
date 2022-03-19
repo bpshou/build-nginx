@@ -114,3 +114,4 @@ jobs:
           asset_path: $GITHUB_ACTION_PATH/$NGINX_NAME
           asset_name: $NGINX_NAME
           asset_content_type: application/zip
+
